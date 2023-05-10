@@ -62,13 +62,13 @@ def radCall():
 
 radVar = tk.IntVar()
 
-rad1 = tk.Radiobutton(win, text = COLOR1, variable=radVar, value=1, command = radCall)
+rad1 = tk.Radiobutton(win, text = COLOR1, variable=radVar, value=0, command = radCall)
 rad1.grid(column=0, row =5, sticky = tk.W, columnspan=3)
 
-rad2 = tk.Radiobutton(win, text = COLOR2, variable=radVar, value=2, command = radCall)
+rad2 = tk.Radiobutton(win, text = COLOR2, variable=radVar, value=1, command = radCall)
 rad2.grid(column=1, row =5, sticky = tk.W, columnspan=3)
 
-rad3 = tk.Radiobutton(win, text = COLOR3, variable=radVar, value=3, command = radCall)
+rad3 = tk.Radiobutton(win, text = COLOR3, variable=radVar, value=2, command = radCall)
 rad3.grid(column=2, row =5, sticky = tk.W, columnspan=3)
 
 #Using a scrolled Text control

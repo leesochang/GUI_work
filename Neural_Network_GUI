@@ -1,0 +1,73 @@
+import tkinter as tk
+from tkinter import filedialog
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+class NeuralNetworkGUI:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Neural Network GUI")
+        self.master.geometry("500x300")
+        self.filepath = ""
+        self.target_var = ""
+        
+        # Create widgets
+        self.select_file_button = tk.Button(self.master, text="Select CSV file", command=self.select_file)
+        self.select_file_button.pack(pady=10)
+
+        self.target_var_label = tk.Label(self.master, text="Target variable")
+        self.target_var_label.pack()
+
+        self.target_var_entry = tk.Entry(self.master)
+        self.target_var_entry.pack()
+
+        self.run_button = tk.Button(self.master, text="Run", command=self.run)
+        self.run_button.pack(pady=10)
+
+    def select_file(self):
+        self.filepath = filedialog.askopenfilename()
+
+    def run(self):
+        if not self.filepath:
+            tk.messagebox.showwarning("Warning", "Please select a CSV file")
+            return
+        if not self.target_var_entry.get():
+            tk.messagebox.showwarning("Warning", "Please enter a target variable")
+            return
+
+        try:
+            df = pd.read_csv(self.filepath)
+        except Exception as e:
+            tk.messagebox.showerror("Error", str(e))
+            return
+
+        self.target_var = self.target_var_entry.get()
+
+        if self.target_var not in df.columns:
+            tk.messagebox.showerror("Error", "Target variable not found in CSV file")
+            return
+
+        # Split data into training and testing sets
+        X = df.drop(self.target_var, axis=1)
+        y = df[self.target_var]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+
+        # Train neural network
+        clf = MLPClassifier(hidden_layer_sizes=(10, 10, 10), max_iter=1000)
+        clf.fit(X_train, y_train)
+
+        # Make predictions on test set
+        y_pred = clf.predict(X_test)
+
+        # Display accuracy and confusion matrix
+        accuracy = accuracy_score(y_test, y_pred)
+        conf_matrix = confusion_matrix(y_test, y_pred)
+        tk.messagebox.showinfo("Results", f"Accuracy: {accuracy}\n\nConfusion matrix:\n{conf_matrix}")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = NeuralNetworkGUI(root)
+    root.mainloop()
